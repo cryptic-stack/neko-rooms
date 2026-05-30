@@ -14,5 +14,6 @@ However, there are some usecases, when this might come in handy:
 In order to pull new lab images run:
 
 ```sh
-docker-compose exec neko-rooms docker pull crypticstack/ihacknebraska:latest
+docker-compose exec neko-rooms docker pull crypticstack/ihacknebraska:xfce
+docker-compose exec neko-rooms docker pull crypticstack/ihacknebraska:kali
 ```

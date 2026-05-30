@@ -64,7 +64,10 @@ func (Room) Init(cmd *cobra.Command) error {
 	}
 
 	cmd.PersistentFlags().StringSlice("neko_images", []string{
-		"crypticstack/ihacknebraska:latest",
+		"crypticstack/ihacknebraska:xfce",
+		"crypticstack/ihacknebraska:kali",
+		"crypticstack/ihacknebraska:firefox",
+		"crypticstack/ihacknebraska:chromium",
 	}, "neko images to be used")
 	if err := viper.BindPFlag("neko_images", cmd.PersistentFlags().Lookup("neko_images")); err != nil {
 		return err

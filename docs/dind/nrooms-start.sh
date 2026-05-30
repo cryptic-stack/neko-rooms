@@ -37,7 +37,8 @@ docker run -d \
       --entrypoints.web.address=:80;
 
 # pull HackLab lab images...
-docker pull crypticstack/ihacknebraska:latest
+docker pull crypticstack/ihacknebraska:xfce
+docker pull crypticstack/ihacknebraska:kali
 
 #
 # (re)start neko-rooms

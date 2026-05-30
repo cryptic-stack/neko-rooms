@@ -1,13 +1,33 @@
 param(
     [string]$Repository = "crypticstack/ihacknebraska",
-    [string]$Tag = "latest",
-    [string]$BaseImage = "ghcr.io/m1k1o/neko/xfce:latest",
+    [string[]]$Images = @("xfce", "kali", "firefox", "chromium"),
     [switch]$NoPush
 )
 
 $ErrorActionPreference = "Stop"
 
-$image = "${Repository}:${Tag}"
+$imageDefinitions = @{
+    xfce = @{
+        Dockerfile = "lab-images/xfce/Dockerfile"
+        Tag = "xfce"
+        AlsoTagLatest = $true
+    }
+    kali = @{
+        Dockerfile = "lab-images/kali/Dockerfile"
+        Tag = "kali"
+        AlsoTagLatest = $false
+    }
+    firefox = @{
+        Dockerfile = "lab-images/firefox/Dockerfile"
+        Tag = "firefox"
+        AlsoTagLatest = $false
+    }
+    chromium = @{
+        Dockerfile = "lab-images/chromium/Dockerfile"
+        Tag = "chromium"
+        AlsoTagLatest = $false
+    }
+}
 
 function Invoke-Docker {
     param(
@@ -21,19 +41,39 @@ function Invoke-Docker {
     }
 }
 
-Write-Host "Building ${image} from ${BaseImage}..."
-Invoke-Docker build `
-    -f Dockerfile.workspace `
-    -t $image `
-    --build-arg BASE_IMAGE=$BaseImage `
-    .
+foreach ($name in $Images) {
+    if (-not $imageDefinitions.ContainsKey($name)) {
+        throw "Unknown lab image '$name'. Available images: $($imageDefinitions.Keys -join ', ')"
+    }
 
-if ($NoPush) {
-    Write-Host "Built ${image}. Skipping push because -NoPush was provided."
-    exit 0
+    $definition = $imageDefinitions[$name]
+    $taggedImage = "${Repository}:$($definition.Tag)"
+
+    Write-Host "Building ${taggedImage}..."
+    Invoke-Docker build `
+        -f $definition.Dockerfile `
+        -t $taggedImage `
+        .
+
+    if ($definition.AlsoTagLatest) {
+        $latestImage = "${Repository}:latest"
+        Write-Host "Tagging ${taggedImage} as ${latestImage}..."
+        Invoke-Docker tag $taggedImage $latestImage
+    }
+
+    if ($NoPush) {
+        Write-Host "Built ${taggedImage}. Skipping push because -NoPush was provided."
+        continue
+    }
+
+    Write-Host "Pushing ${taggedImage}..."
+    Invoke-Docker push $taggedImage
+
+    if ($definition.AlsoTagLatest) {
+        $latestImage = "${Repository}:latest"
+        Write-Host "Pushing ${latestImage}..."
+        Invoke-Docker push $latestImage
+    }
 }
 
-Write-Host "Pushing ${image}..."
-Invoke-Docker push $image
-
-Write-Host "Published ${image}."
+Write-Host "Finished HackLab lab image publishing workflow."

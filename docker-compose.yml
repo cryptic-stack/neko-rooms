@@ -16,7 +16,7 @@ services:
       - "NEKO_ROOMS_INSTANCE_NETWORK=neko-rooms-net"
       - "NEKO_ROOMS_TRAEFIK_ENABLED=false"
       - "NEKO_ROOMS_PATH_PREFIX=/room/"
-      - "NEKO_ROOMS_NEKO_IMAGES=${HACKLAB_LAB_IMAGES:-crypticstack/ihacknebraska:latest}"
+      - "NEKO_ROOMS_NEKO_IMAGES=${HACKLAB_LAB_IMAGES:-crypticstack/ihacknebraska:xfce crypticstack/ihacknebraska:kali crypticstack/ihacknebraska:firefox crypticstack/ihacknebraska:chromium}"
       - "NEKO_ROOMS_STORAGE_ENABLED=true"
       - "NEKO_ROOMS_STORAGE_INTERNAL=/data"
       - "NEKO_ROOMS_STORAGE_EXTERNAL=/opt/neko-rooms/data"

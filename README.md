@@ -45,25 +45,31 @@ Otherwise modify variables in `docker-compose.yml` and just run `docker-compose 
 You need to pull all lab images you want to use. Otherwise, you might get this error: `Error response from daemon: No such image:` (see issue #1).
 
 ```sh
-docker pull crypticstack/ihacknebraska:latest
+docker pull crypticstack/ihacknebraska:xfce
+docker pull crypticstack/ihacknebraska:kali
+docker pull crypticstack/ihacknebraska:firefox
+docker pull crypticstack/ihacknebraska:chromium
 ```
 
 By default, HackLab loads lab images from Docker Hub using:
 
 ```sh
-crypticstack/ihacknebraska:latest
+crypticstack/ihacknebraska:xfce
+crypticstack/ihacknebraska:kali
+crypticstack/ihacknebraska:firefox
+crypticstack/ihacknebraska:chromium
 ```
 
-To build and publish the default lab image:
+To build and publish all default lab images:
 
 ```powershell
 .\scripts\publish-lab-images.ps1
 ```
 
-To publish to a different Docker Hub namespace or tag:
+To publish a single image to a different Docker Hub namespace:
 
 ```powershell
-.\scripts\publish-lab-images.ps1 -Repository your-dockerhub-org/your-lab-image -Tag latest
+.\scripts\publish-lab-images.ps1 -Repository your-dockerhub-org/your-lab-image -Images xfce
 ```
 
 Make sure Docker Desktop is logged in to an account with push access before publishing:
@@ -75,7 +81,7 @@ docker login
 You can override the default lab image list in `docker-compose.yml` with `HACKLAB_LAB_IMAGES`:
 
 ```sh
-HACKLAB_LAB_IMAGES="crypticstack/ihacknebraska:latest"
+HACKLAB_LAB_IMAGES="crypticstack/ihacknebraska:xfce crypticstack/ihacknebraska:kali"
 ```
 
 If you want to update a lab image, pull the new image and recreate all labs that use the old image. To update HackLab itself, run:

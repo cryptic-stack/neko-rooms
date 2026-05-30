@@ -122,7 +122,7 @@ func (Room) Init(cmd *cobra.Command) error {
 
 	// Instance
 
-	cmd.PersistentFlags().String("instance.name", "neko-rooms", "unique instance name (if running muliple on the same host)")
+	cmd.PersistentFlags().String("instance.name", "hacklab", "unique instance name (if running muliple on the same host)")
 	if err := viper.BindPFlag("instance.name", cmd.PersistentFlags().Lookup("instance.name")); err != nil {
 		return err
 	}

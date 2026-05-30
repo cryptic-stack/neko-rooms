@@ -1,10 +1,12 @@
+name: "hacklab"
+
 networks:
   default:
     attachable: true
-    name: "neko-rooms-net"
+    name: "hacklab-net"
 
 services:
-  neko-rooms:
+  hacklab:
     image: "crypticstack/hacklab-rooms:local"
     build:
       context: "."
@@ -15,15 +17,16 @@ services:
       - "NEKO_ROOMS_EPR=59000-59049"
       - "NEKO_ROOMS_NAT1TO1=${NEKO_ROOMS_NAT1TO1:-192.168.1.15}" # IP address of your server that is reachable from client
       - "NEKO_ROOMS_INSTANCE_URL=http://${NEKO_ROOMS_NAT1TO1:-192.168.1.15}:8080/" # external URL
-      - "NEKO_ROOMS_INSTANCE_NETWORK=neko-rooms-net"
+      - "NEKO_ROOMS_INSTANCE_NAME=hacklab"
+      - "NEKO_ROOMS_INSTANCE_NETWORK=hacklab-net"
       - "NEKO_ROOMS_TRAEFIK_ENABLED=false"
       - "NEKO_ROOMS_PATH_PREFIX=/room/"
       - "NEKO_ROOMS_NEKO_IMAGES=${HACKLAB_LAB_IMAGES:-crypticstack/ihacknebraska:xfce crypticstack/ihacknebraska:kali crypticstack/ihacknebraska:firefox crypticstack/ihacknebraska:chromium}"
       - "NEKO_ROOMS_STORAGE_ENABLED=true"
       - "NEKO_ROOMS_STORAGE_INTERNAL=/data"
-      - "NEKO_ROOMS_STORAGE_EXTERNAL=/opt/neko-rooms/data"
+      - "NEKO_ROOMS_STORAGE_EXTERNAL=/opt/hacklab/data"
     ports:
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/opt/neko-rooms/data:/data"
+      - "/opt/hacklab/data:/data"

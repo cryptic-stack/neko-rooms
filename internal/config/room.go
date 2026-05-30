@@ -64,20 +64,7 @@ func (Room) Init(cmd *cobra.Command) error {
 	}
 
 	cmd.PersistentFlags().StringSlice("neko_images", []string{
-		"ghcr.io/m1k1o/neko/firefox",
-		"ghcr.io/m1k1o/neko/waterfox",
-		"ghcr.io/m1k1o/neko/tor-browser",
-		"ghcr.io/m1k1o/neko/chromium",
-		"ghcr.io/m1k1o/neko/google-chrome",
-		"ghcr.io/m1k1o/neko/ungoogled-chromium",
-		"ghcr.io/m1k1o/neko/microsoft-edge",
-		"ghcr.io/m1k1o/neko/brave",
-		"ghcr.io/m1k1o/neko/vivaldi",
-		"ghcr.io/m1k1o/neko/opera",
-		"ghcr.io/m1k1o/neko/remmina",
-		"ghcr.io/m1k1o/neko/vlc",
-		"ghcr.io/m1k1o/neko/xfce",
-		"ghcr.io/m1k1o/neko/kde",
+		"crypticstack/ihacknebraska:latest",
 	}, "neko images to be used")
 	if err := viper.BindPFlag("neko_images", cmd.PersistentFlags().Lookup("neko_images")); err != nil {
 		return err

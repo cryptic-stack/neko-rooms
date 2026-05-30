@@ -1,4 +1,4 @@
-# Storage for neko-rooms
+# Storage for HackLab
 
 This needs to be specified in docker-compose:
 
@@ -32,7 +32,7 @@ Where:
 - `NEKO_ROOMS_STORAGE_EXTERNAL` is the directory outside container.
 - `"/opt/neko-rooms/data:/data"` is volume mount.
 
-Please note, that **neko-rooms** must be aware of external storage path, as it is going to mount it to the room itself. That needs to be available to **neko-rooms** as well, in order to manage that folder.
+Please note, that **HackLab** must be aware of the external storage path, as it is going to mount it to the lab session itself. That path needs to be available to **HackLab** as well, in order to manage that folder.
 
 Inside storage path (e.g. `/opt/neko-rooms/data`) there will be available these mount points:
 

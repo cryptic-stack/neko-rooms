@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      <span class="headline"> Create new Room </span>
+      <span class="headline"> Create new lab </span>
     </v-card-title>
     <v-card-text>
       <v-form
@@ -22,7 +22,7 @@
           </v-col>
           <v-col class="pb-0">
             <v-select
-              label="Neko image"
+              label="Lab image"
               :items="nekoImages"
               v-model="data.neko_image"
             ></v-select>
@@ -32,7 +32,7 @@
         <v-row align="center">
           <v-col>
             <v-text-field
-              label="User password"
+              label="Learner password"
               v-model="data.user_pass"
               :append-icon="showUserPass ? 'mdi-eye' : 'mdi-eye-off'"
               :type="showUserPass ? 'text' : 'password'"
@@ -44,7 +44,7 @@
           </v-col>
           <v-col>
             <v-text-field
-              label="Admin password"
+              label="Instructor password"
               v-model="data.admin_pass"
               :append-icon="showAdminPass ? 'mdi-eye' : 'mdi-eye-off'"
               :type="showAdminPass ? 'text' : 'password'"
@@ -65,7 +65,7 @@
               hide-details
               class="shrink ml-2 mt-0"
             ></v-checkbox>
-            <div style="margin-left: 41px;"><i>Users can gain control only if at least one admin is in the room.</i></div>
+            <div style="margin-left: 41px;"><i>Learners can gain control only when an instructor is present in the lab.</i></div>
           </v-col>
           <v-col class="pt-0">
             <v-checkbox
@@ -74,7 +74,7 @@
               hide-details
               class="shrink ml-2 mt-0"
             ></v-checkbox>
-            <div style="margin-left: 41px;"><i>Users do not need to request control prior usage.</i></div>
+            <div style="margin-left: 41px;"><i>Learners do not need to request control before using the lab.</i></div>
           </v-col>
         </v-row>
         <v-row align="center" v-else>
@@ -93,14 +93,14 @@
               hide-details
               class="shrink ml-2 mt-0"
             ></v-checkbox>
-            <div style="margin-left: 41px;"><i>Users can gain control only if at least one admin is in the room.</i></div>
+            <div style="margin-left: 41px;"><i>Learners can gain control only when an instructor is present in the lab.</i></div>
             <v-checkbox
               v-model="data.implicit_control"
               label="Enable implicit control"
               hide-details
               class="shrink ml-2 mt-0"
             ></v-checkbox>
-            <div style="margin-left: 41px;"><i>Users do not need to request control prior usage.</i></div>
+            <div style="margin-left: 41px;"><i>Learners do not need to request control before using the lab.</i></div>
           </v-col>
         </v-row>
 

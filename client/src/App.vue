@@ -6,13 +6,13 @@
       dark
     >
       <div>
-        <a href="https://github.com/m1k1o/neko-rooms" style="text-decoration: none; color:white">neko-rooms</a>
+        <span style="font-weight: 500;">HackLab</span>
       </div>
 
       <v-spacer></v-spacer>
 
       <div>
-        by <a href="https://m1k1o.net" style="text-decoration: none; color:white">m1k1o</a>
+        iHack Nebraska learning labs
       </div>
     </v-app-bar>
 
@@ -29,7 +29,7 @@
       <span>&copy; {{ new Date().getFullYear() }}</span>
       <v-spacer></v-spacer>
       <div>
-        based on <a href="https://github.com/m1k1o/neko" style="text-decoration: none; color:white">n.eko</a>
+        Built for Hack Your School Club
       </div>
     </v-footer>
   </v-app>

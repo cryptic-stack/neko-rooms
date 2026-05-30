@@ -7,7 +7,7 @@ WORKDIR /src
 #
 # install dependencies
 COPY client/package*.json client/.npmrc ./
-RUN npm install
+RUN npm ci
 
 #
 # build client
@@ -20,9 +20,11 @@ RUN npm run build
 FROM golang:1.24-bookworm AS builder
 WORKDIR /app
 
+COPY go.mod go.sum ./
+RUN go mod download
+
 COPY . .
-RUN go get -v -t -d .; \
-    CGO_ENABLED=0 go build -o bin/neko_rooms cmd/neko_rooms/main.go
+RUN CGO_ENABLED=0 go build -o bin/neko_rooms cmd/neko_rooms/main.go
 
 #
 # STAGE 3: build a small image

@@ -33,7 +33,7 @@
           <v-icon small v-else>mdi-clipboard-multiple-outline</v-icon>
         </v-btn>
       </template>
-      <span>copy link to clipboard</span>
+      <span>copy invite link to clipboard</span>
     </v-tooltip>
   </div>
 </template>

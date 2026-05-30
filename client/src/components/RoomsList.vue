@@ -15,7 +15,7 @@
             <v-btn v-bind="attrs" v-on="on" :disabled="!item.running" :href="item.url" target="_blank" small> <v-icon
                 small>mdi-open-in-new</v-icon></v-btn>
           </template>
-          <span>Link to deployment</span>
+          <span>Open lab session</span>
         </v-tooltip>
       </template>
       <template v-slot:[`item.neko_image`]="{ item }">
@@ -25,7 +25,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-icon v-bind="attrs" v-on="on" class="ml-2" color="warning">mdi-update</v-icon>
           </template>
-          <div class="text-center">This image is outdated. <br> Recreate room to update it.</div>
+          <div class="text-center">This lab image is outdated. <br> Recreate the lab to update it.</div>
         </v-tooltip>
       </template>
       <template v-slot:[`item.max_connections`]="{ item }">
@@ -53,7 +53,7 @@
     <v-dialog v-model="dialog" max-width="920px">
       <v-card>
         <v-card-title class="headline">
-          Room information
+          Lab information
         </v-card-title>
         <v-card-text>
           <RoomInfo v-if="dialog" :roomId="roomId" />
@@ -90,7 +90,7 @@ export default class RoomsList extends Vue {
   get headers() {
     return [
       {
-        text: 'Deployment',
+        text: 'Lab',
         value: 'url',
         sortable: false,
       },
@@ -99,7 +99,7 @@ export default class RoomsList extends Vue {
       ...(!this.$store.state.roomsConfig.uses_mux ? [
         { text: 'Max connections', value: 'max_connections' }
       ] : []),
-      { text: 'Neko image', value: 'neko_image' },
+      { text: 'Lab image', value: 'neko_image' },
       { text: 'Status', value: 'status' },
       { text: 'Created', value: 'created' },
       {

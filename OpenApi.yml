@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Neko Rooms
+  title: HackLab
   version: 1.0.0
 servers:
   # Added by API Auto Mocking Plugin
@@ -416,7 +416,7 @@ components:
           example: bc04dace10
         url:
           type: string
-          example: http://neko-rooms.server.lan/foobar/
+          example: http://hacklab.server.lan/foobar/
         name:
           type: string
           example: foobar

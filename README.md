@@ -1,4 +1,4 @@
-# neko-rooms
+# HackLab
 
 <p align="center">
   <img src="https://img.shields.io/github/v/release/m1k1o/neko-rooms" alt="release">
@@ -8,17 +8,17 @@
   <a href="https://discord.gg/3U6hWpC" ><img src="https://discordapp.com/api/guilds/665851821906067466/widget.png" alt="Chat on discord"></a>
 </p>
 
-Simple room management system for [n.eko](https://github.com/m1k1o/neko). Self hosted rabb.it alternative.
+Hands-on hacking labs for iHack Nebraska and Hack Your School Club. HackLab gives instructors and club mentors a simple way to launch shared browser and desktop environments for workshops, cybersecurity lessons, and coding activities.
 
 <div align="center">
   <img src="https://github.com/m1k1o/neko-rooms/raw/master/docs/rooms.png" alt="rooms">
-  <img src="https://github.com/m1k1o/neko-rooms/raw/master/docs/new_room.png" alt="new room">
-  <img src="https://github.com/m1k1o/neko-rooms/raw/master/docs/neko.gif" alt="n.eko">
+  <img src="https://github.com/m1k1o/neko-rooms/raw/master/docs/new_room.png" alt="new lab">
+  <img src="https://github.com/m1k1o/neko-rooms/raw/master/docs/neko.gif" alt="learning lab preview">
 </div>
 
 ## Zero-knowledge installation (with HTTPS)
 
-No experience with Docker and reverse proxy? No problem! Follow these steps to set up your Neko Rooms quickly and securely:
+No experience with Docker and reverse proxy? No problem! Follow these steps to set up HackLab quickly and securely:
 
 - Rent a VPS with public IP and OS Ubuntu.
 - Get a domain name pointing to your IP (you can even get some for free).
@@ -32,7 +32,7 @@ sudo bash neko-rooms-traefik.sh
 
 ### Community Installation Scripts
 
-We have community-contributed installation scripts available. Check out our [community installation guides](./community/README.md) for instructions on installing neko-rooms on various Linux distributions. These scripts are maintained by the community and support different Linux distributions like Arch Linux, Fedora, and more.
+We have community-contributed installation scripts available. Check out our [community installation guides](./community/README.md) for instructions on installing HackLab on various Linux distributions. These scripts are maintained by the community and support different Linux distributions like Arch Linux, Fedora, and more.
 
 ## How to start
 
@@ -42,15 +42,43 @@ Otherwise modify variables in `docker-compose.yml` and just run `docker-compose 
 
 ### Download images / update
 
-You need to pull all your images, that you want to use with neko-room. Otherwise, you might get this error: `Error response from daemon: No such image:` (see issue #1).
+You need to pull all lab images you want to use. Otherwise, you might get this error: `Error response from daemon: No such image:` (see issue #1).
 
 ```sh
-docker pull ghcr.io/m1k1o/neko/firefox
-docker pull ghcr.io/m1k1o/neko/chromium
-# etc...
+docker pull crypticstack/ihacknebraska:latest
 ```
 
-If you want to update neko image, you need to pull new image and recreate all rooms, that use old image. To update neko rooms, simply run:
+By default, HackLab loads lab images from Docker Hub using:
+
+```sh
+crypticstack/ihacknebraska:latest
+```
+
+To build and publish the default lab image:
+
+```powershell
+.\scripts\publish-lab-images.ps1
+```
+
+To publish to a different Docker Hub namespace or tag:
+
+```powershell
+.\scripts\publish-lab-images.ps1 -Repository your-dockerhub-org/your-lab-image -Tag latest
+```
+
+Make sure Docker Desktop is logged in to an account with push access before publishing:
+
+```sh
+docker login
+```
+
+You can override the default lab image list in `docker-compose.yml` with `HACKLAB_LAB_IMAGES`:
+
+```sh
+HACKLAB_LAB_IMAGES="crypticstack/ihacknebraska:latest"
+```
+
+If you want to update a lab image, pull the new image and recreate all labs that use the old image. To update HackLab itself, run:
 
 ```sh
 docker-compose pull
@@ -69,7 +97,7 @@ If you didn't specify storage yet, you can do it using [this tutorial](./docs/st
 
 If you want to use nvidia GPU, you need to install [nvidia-docker](https://github.com/NVIDIA/nvidia-docker).
 
-Change neko images to nvidia images in `docker-compose.yml` using envorinment variable `NEKO_ROOMS_NEKO_IMAGES`:
+Change lab images to nvidia images in `docker-compose.yml` using environment variable `NEKO_ROOMS_NEKO_IMAGES`:
 
 ```bash
 NEKO_ROOMS_NEKO_IMAGES="
@@ -80,7 +108,7 @@ NEKO_ROOMS_NEKO_IMAGES="
 "
 ```
 
-When creating new room, you need to specify to use GPU in expext settings.
+When creating a new lab, enable GPU support in expert settings.
 
 ### Docs
 

@@ -6,13 +6,13 @@
       color="info"
       dark
     >
-      <v-icon class="mr-2" color="white">{{ status.active ? 'mdi-cloud-sync' : 'mdi-cloud-download-outline' }}</v-icon> Pull neko images
+      <v-icon class="mr-2" color="white">{{ status.active ? 'mdi-cloud-sync' : 'mdi-cloud-download-outline' }}</v-icon> Pull lab images
     </v-btn>
 
     <v-dialog v-model="dialog" max-width="780px">
       <v-card>
         <v-card-title class="headline">
-          Pull neko images
+          Pull lab images
         </v-card-title>
         <v-card-text>
           <template v-if="status.active && status.layers && status.layers.length > 0">
@@ -22,7 +22,7 @@
           <template v-if="status.status && status.status.length > 0">
             <pre v-for="text in status.status" :key="text">{{ text }}</pre>
           </template>
-          <pre v-else-if="status.active">Preparing docker image pull</pre>
+          <pre v-else-if="status.active">Preparing lab image pull</pre>
         </v-card-text>
         <v-card-actions>
           <template v-if="!status.active">
@@ -32,7 +32,7 @@
               dense
               outlined
               hide-details
-              label="Neko image"
+              label="Lab image"
             ></v-select>
             <v-btn color="green" class="ml-2" :loading="loading" @click="Start">
               Start

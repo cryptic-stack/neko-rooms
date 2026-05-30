@@ -9,7 +9,7 @@
           color="info"
           dark
         >
-          + Quick room
+          + Quick lab
         </v-btn>
       </template>
 
@@ -28,7 +28,7 @@
     <v-dialog v-model="dialog" max-width="920px">
       <v-card>
         <v-card-title class="headline">
-          Room information
+          Lab information
         </v-card-title>
         <v-card-text>
           <RoomInfo v-if="dialog" :roomId="roomId" />

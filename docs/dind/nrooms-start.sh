@@ -36,9 +36,8 @@ docker run -d \
       --providers.docker.network=traefik \
       --entrypoints.web.address=:80;
 
-# pull some neko images...
-docker pull ghcr.io/m1k1o/neko/firefox
-docker pull ghcr.io/m1k1o/neko/chromium
+# pull HackLab lab images...
+docker pull crypticstack/ihacknebraska:latest
 
 #
 # (re)start neko-rooms

@@ -1,0 +1,10 @@
+ARG BASE_IMAGE=ghcr.io/m1k1o/neko/xfce:latest
+FROM ${BASE_IMAGE}
+
+COPY workspace-branding/hacklab-logo.svg /var/www/img/logo.800bec71.svg
+COPY workspace-branding/apply-hacklab-branding.sh /tmp/apply-hacklab-branding.sh
+COPY client/public/hacklab-icon-16x16.png /var/www/favicon-16x16.png
+COPY client/public/hacklab-icon-32x32.png /var/www/favicon-32x32.png
+COPY client/public/hacklab-icon-32x32.png /var/www/apple-touch-icon.png
+
+RUN sh /tmp/apply-hacklab-branding.sh && rm /tmp/apply-hacklab-branding.sh

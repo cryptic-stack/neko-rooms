@@ -13,11 +13,11 @@
       type="warning"
       v-else-if="!settings"
     >
-      <p><strong>Room not loaded!</strong></p>
-      <p class="mb-0">Check your internet connectivity. Try to recreate room.</p>
+      <p><strong>Lab not loaded!</strong></p>
+      <p class="mb-0">Check your internet connectivity. Try to recreate the lab.</p>
     </v-alert>
     <template v-else>
-      <div class="my-3 headline">Room members</div>
+      <div class="my-3 headline">Lab participants</div>
       <v-row v-if="stats">
         <v-col class="text-center">
           <div class="mb-3">
@@ -37,9 +37,9 @@
             <template v-slot:default>
               <thead>
                 <tr>
-                  <th> Dispaly name </th>
-                  <th class="text-center"> Is Hosting </th>
-                  <th class="text-center"> Is Admin </th>
+                  <th> Display name </th>
+                  <th class="text-center"> Has Control </th>
+                  <th class="text-center"> Instructor </th>
                   <th class="text-center"> Is Muted </th>
                 </tr>
               </thead>
@@ -62,7 +62,7 @@
               </tbody>
               <tbody v-else>
                 <tr>
-                  <td style="pointer-events: none;" colspan="4" class="text-center">no members</td>
+                  <td style="pointer-events: none;" colspan="4" class="text-center">no participants</td>
                 </tr>
               </tbody>
             </template>
@@ -75,15 +75,15 @@
           type="info"
           v-if="room.status.includes('starting')"
         >
-          <p><strong>Room stats are not available.</strong></p>
-          <p class="mb-0">Because room is currently starting. They will be availalbe soon.</p>
+          <p><strong>Lab stats are not available.</strong></p>
+          <p class="mb-0">The lab is currently starting. They will be available soon.</p>
         </v-alert>
         <v-alert
           border="left"
           type="warning"
           v-else
         >
-          <p><strong>Room stats are not available.</strong></p>
+          <p><strong>Lab stats are not available.</strong></p>
           <p class="mb-0">{{ statsErr }}</p>
         </v-alert>
       </template>
@@ -97,12 +97,12 @@
         <template v-slot:default>
           <tbody>
             <tr><th style="width:50%;"> Name </th><td>{{ settings.name }}</td></tr>
-            <tr><th> Neko image </th><td>{{ settings.neko_image }}</td></tr>
-            <tr><th> User password </th><td>
-              <RoomLink :roomId="roomId" :password="settings.user_pass" label="invite link for users" />
+            <tr><th> Lab image </th><td>{{ settings.neko_image }}</td></tr>
+            <tr><th> Learner password </th><td>
+              <RoomLink :roomId="roomId" :password="settings.user_pass" label="invite link for learners" />
             </td></tr>
-            <tr><th> Admin password </th><td>
-              <RoomLink :roomId="roomId" :password="settings.admin_pass" label="invite link for admins" />
+            <tr><th> Instructor password </th><td>
+              <RoomLink :roomId="roomId" :password="settings.admin_pass" label="invite link for instructors" />
             </td></tr>
             <tr v-if="!usesMux"><th> Max connections </th><td>
               <template v-if="settings.max_connections > 0">{{ settings.max_connections }}</template>

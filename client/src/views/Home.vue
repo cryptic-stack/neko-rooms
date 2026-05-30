@@ -44,7 +44,7 @@
               color="success"
               dark
             >
-              + Add room
+              + Add lab
             </v-btn>
           </template>
 

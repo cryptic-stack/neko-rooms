@@ -6,14 +6,14 @@ toolchain go1.24.1
 
 require (
 	github.com/containerd/errdefs v1.0.0
-	github.com/docker/cli v28.4.0+incompatible
-	github.com/docker/docker v28.4.0+incompatible
-	github.com/docker/go-connections v0.6.0
-	github.com/go-chi/chi/v5 v5.2.3
+	github.com/docker/cli v28.5.2+incompatible
+	github.com/docker/docker v28.5.2+incompatible
+	github.com/docker/go-connections v0.7.0
+	github.com/go-chi/chi/v5 v5.3.0
 	github.com/go-chi/cors v1.2.2
 	github.com/prometheus/client_golang v1.23.2
-	github.com/rs/zerolog v1.34.0
-	github.com/spf13/cobra v1.10.1
+	github.com/rs/zerolog v1.35.1
+	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0
 	gopkg.in/yaml.v3 v3.0.1
 )

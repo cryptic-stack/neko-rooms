@@ -26,7 +26,7 @@ export default class RoomActionBtn extends Vue {
       case 'start':
         return {
           dispatch: 'ROOMS_START',
-          msg: 'Room started!',
+          msg: 'Lab started!',
           tooltip: 'Start',
           color: 'green',
           icon: 'mdi-play-circle-outline',
@@ -34,7 +34,7 @@ export default class RoomActionBtn extends Vue {
       case 'stop':
         return {
           dispatch: 'ROOMS_STOP',
-          msg: 'Room stopped!',
+          msg: 'Lab stopped!',
           tooltip: 'Stop',
           color: 'warning',
           icon: 'mdi-stop-circle-outline',
@@ -42,7 +42,7 @@ export default class RoomActionBtn extends Vue {
       case 'pause':
         return {
           dispatch: 'ROOMS_PAUSE',
-          msg: 'Room paused!',
+          msg: 'Lab paused!',
           tooltip: 'Pause',
           color: 'orange',
           icon: 'mdi-pause-circle-outline',
@@ -50,7 +50,7 @@ export default class RoomActionBtn extends Vue {
       case 'restart':
         return {
           dispatch: 'ROOMS_RESTART',
-          msg: 'Room restarted!',
+          msg: 'Lab restarted!',
           tooltip: 'Restart',
           color: 'blue',
           icon: 'mdi-refresh',
@@ -58,7 +58,7 @@ export default class RoomActionBtn extends Vue {
       case 'recreate':
         return {
           dispatch: 'ROOMS_RECREATE',
-          msg: 'Room recreated!',
+          msg: 'Lab recreated!',
           tooltip: 'Recreate',
           color: 'blue',
           icon: 'mdi-cloud-refresh',
@@ -66,7 +66,7 @@ export default class RoomActionBtn extends Vue {
       case 'remove':
         return {
           dispatch: 'ROOMS_REMOVE',
-          msg: 'Room removed!',
+          msg: 'Lab removed!',
           tooltip: 'Remove',
           color: 'red',
           icon: 'mdi-trash-can-outline',
@@ -81,8 +81,8 @@ export default class RoomActionBtn extends Vue {
 
     if (this.action === 'remove') {
       const { value } = await this.$swal({
-        title: "Remove room",
-        text: "Do you really want to remove this room?",
+        title: "Remove lab",
+        text: "Do you really want to remove this lab?",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: "Yes",
@@ -92,8 +92,8 @@ export default class RoomActionBtn extends Vue {
       if (!value) return
     } else if (this.action === 'recreate') {
       const { value } = await this.$swal({
-        title: "Recreate room",
-        text: "Do you really want to recreate this room? It will delete all your non-persistent data.",
+        title: "Recreate lab",
+        text: "Do you really want to recreate this lab? It will delete all non-persistent learner data.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: "Yes",

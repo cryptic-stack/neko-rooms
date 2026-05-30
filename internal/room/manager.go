@@ -615,7 +615,7 @@ func (manager *RoomManagerCtx) Create(ctx context.Context, settings types.RoomSe
 	// Set container configs
 	//
 
-	hostname := containerName
+	hostname := "hacklab-" + roomName
 	if settings.Hostname != "" {
 		hostname = settings.Hostname
 	}

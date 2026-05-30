@@ -93,7 +93,7 @@ export default class RoomActionBtn extends Vue {
     } else if (this.action === 'recreate') {
       const { value } = await this.$swal({
         title: "Recreate lab",
-        text: "Do you really want to recreate this lab? It will delete all non-persistent learner data.",
+        text: "Do you really want to recreate this lab? It will delete all non-persistent student data.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: "Yes",

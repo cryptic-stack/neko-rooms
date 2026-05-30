@@ -32,7 +32,7 @@
         <v-row align="center">
           <v-col>
             <v-text-field
-              label="Learner password"
+              label="Student password"
               v-model="data.user_pass"
               :append-icon="showUserPass ? 'mdi-eye' : 'mdi-eye-off'"
               :type="showUserPass ? 'text' : 'password'"
@@ -65,7 +65,7 @@
               hide-details
               class="shrink ml-2 mt-0"
             ></v-checkbox>
-            <div style="margin-left: 41px;"><i>Learners can gain control only when an instructor is present in the lab.</i></div>
+            <div style="margin-left: 41px;"><i>Students can gain control only when an instructor is present in the lab.</i></div>
           </v-col>
           <v-col class="pt-0">
             <v-checkbox
@@ -74,7 +74,7 @@
               hide-details
               class="shrink ml-2 mt-0"
             ></v-checkbox>
-            <div style="margin-left: 41px;"><i>Learners do not need to request control before using the lab.</i></div>
+            <div style="margin-left: 41px;"><i>Students do not need to request control before using the lab.</i></div>
           </v-col>
         </v-row>
         <v-row align="center" v-else>
@@ -93,14 +93,14 @@
               hide-details
               class="shrink ml-2 mt-0"
             ></v-checkbox>
-            <div style="margin-left: 41px;"><i>Learners can gain control only when an instructor is present in the lab.</i></div>
+            <div style="margin-left: 41px;"><i>Students can gain control only when an instructor is present in the lab.</i></div>
             <v-checkbox
               v-model="data.implicit_control"
               label="Enable implicit control"
               hide-details
               class="shrink ml-2 mt-0"
             ></v-checkbox>
-            <div style="margin-left: 41px;"><i>Learners do not need to request control before using the lab.</i></div>
+            <div style="margin-left: 41px;"><i>Students do not need to request control before using the lab.</i></div>
           </v-col>
         </v-row>
 

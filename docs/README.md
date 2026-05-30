@@ -1,6 +1,6 @@
 # Docs
 
-Case study: having 2 labs, each with max 5 learners, they only need 10 ports to be forwarded so the range can be `59000-59009`.
+Case study: having 2 labs, each with max 5 students, they only need 10 ports to be forwarded so the range can be `59000-59009`.
 
 ![architecture](./architecture.svg)
 

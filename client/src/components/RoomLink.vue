@@ -59,7 +59,11 @@ export default class RoomLink extends Vue {
   }
 
   get url() {
-    return this.room.url + '?pwd=' + encodeURIComponent(this.password)
+    const params = new URLSearchParams({
+      pwd: this.password,
+      usr: this.label.includes('instructor') ? 'Instructor' : 'Student',
+    })
+    return `${this.room.url}?${params.toString()}`
   }
   
   togglePass() {

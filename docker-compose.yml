@@ -5,7 +5,9 @@ networks:
 
 services:
   neko-rooms:
-    image: "m1k1o/neko-rooms:latest"
+    image: "crypticstack/hacklab-rooms:local"
+    build:
+      context: "."
     restart: "unless-stopped"
     environment:
       - "TZ=Europe/Vienna"

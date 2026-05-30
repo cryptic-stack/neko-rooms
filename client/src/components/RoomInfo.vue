@@ -98,8 +98,8 @@
           <tbody>
             <tr><th style="width:50%;"> Name </th><td>{{ settings.name }}</td></tr>
             <tr><th> Lab image </th><td>{{ settings.neko_image }}</td></tr>
-            <tr><th> Learner password </th><td>
-              <RoomLink :roomId="roomId" :password="settings.user_pass" label="invite link for learners" />
+            <tr><th> Student password </th><td>
+              <RoomLink :roomId="roomId" :password="settings.user_pass" label="invite link for students" />
             </td></tr>
             <tr><th> Instructor password </th><td>
               <RoomLink :roomId="roomId" :password="settings.admin_pass" label="invite link for instructors" />

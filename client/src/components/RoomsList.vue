@@ -12,7 +12,7 @@
         </v-tooltip>
         <v-tooltip bottom open-delay="300">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" :disabled="!item.running" :href="item.url" target="_blank" small> <v-icon
+            <v-btn v-bind="attrs" v-on="on" :disabled="!item.running" @click="OpenRoom(item)" small> <v-icon
                 small>mdi-open-in-new</v-icon></v-btn>
           </template>
           <span>Open lab session</span>
@@ -73,6 +73,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import RoomInfo from '@/components/RoomInfo.vue'
 import RoomActionBtn from '@/components/RoomActionBtn.vue'
+import { RoomEntry, RoomSettings } from '@/api/index'
 
 @Component({
   components: {
@@ -118,6 +119,16 @@ export default class RoomsList extends Vue {
 
   get rooms() {
     return this.$store.state.rooms
+  }
+
+  async OpenRoom(room: RoomEntry) {
+    const settings: RoomSettings = await this.$store.dispatch('ROOMS_SETTINGS', room.id)
+    const params = new URLSearchParams({
+      pwd: settings.user_pass || settings.admin_pass || '',
+      usr: 'Student',
+    })
+    const url = `${room.url}?${params.toString()}`
+    window.open(url, '_blank', 'noopener')
   }
 
   async Reload(roomId: string) {

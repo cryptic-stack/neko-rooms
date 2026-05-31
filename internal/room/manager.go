@@ -52,6 +52,25 @@ func New(client *dockerClient.Client, config *config.Room) *RoomManagerCtx {
 	}
 }
 
+func uniqueStrings(values ...string) []string {
+	result := make([]string, 0, len(values))
+	seen := map[string]struct{}{}
+
+	for _, value := range values {
+		if value == "" {
+			continue
+		}
+		if _, ok := seen[value]; ok {
+			continue
+		}
+
+		seen[value] = struct{}{}
+		result = append(result, value)
+	}
+
+	return result
+}
+
 type RoomManagerCtx struct {
 	logger zerolog.Logger
 	config *config.Room
@@ -689,7 +708,9 @@ func (manager *RoomManagerCtx) Create(ctx context.Context, settings types.RoomSe
 
 	networkingConfig := &dockerNetwork.NetworkingConfig{
 		EndpointsConfig: map[string]*dockerNetwork.EndpointSettings{
-			manager.config.InstanceNetwork: {},
+			manager.config.InstanceNetwork: {
+				Aliases: uniqueStrings(roomName, containerName, hostname),
+			},
 		},
 	}
 

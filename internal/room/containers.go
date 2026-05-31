@@ -39,6 +39,10 @@ func (manager *RoomManagerCtx) containerToEntry(container dockerContainer.Summar
 		ContainerLabels: container.Labels,
 	}
 
+	if !labels.StatsEnabled && container.State == "running" {
+		entry.IsReady = true
+	}
+
 	if labels.Mux {
 		entry.MaxConnections = 0
 	}

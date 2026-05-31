@@ -203,6 +203,20 @@ func (e *events) waitForRoomReady(roomId string, labels map[string]string) {
 	go func() {
 		defer e.wg.Done()
 
+		statsEnabled, err := statsEnabledFromLabels(labels)
+		if err != nil {
+			e.logger.Err(err).Str("id", roomId).Msg("failed to detect stats setting")
+			return
+		}
+		if !statsEnabled {
+			e.logger.Debug().Str("id", roomId).Msg("room ready without stats probe")
+			e.roomsReadyCh <- roomReady{
+				id:     roomId,
+				labels: labels,
+			}
+			return
+		}
+
 		frontendPort, err := frontendPortFromLabels(labels)
 		if err != nil {
 			e.logger.Err(err).Str("id", roomId).Msg("failed to detect frontend port")

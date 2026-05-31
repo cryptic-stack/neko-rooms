@@ -212,6 +212,11 @@ func (p *ProxyManagerCtx) newProxyHandler(prefix, host string) http.Handler {
 		Scheme: "http",
 		Host:   host,
 	})
+	director := handler.Director
+	handler.Director = func(r *http.Request) {
+		director(r)
+		r.Header.Set("X-Forwarded-Prefix", prefix)
+	}
 	handler.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
 		p.logger.Err(err).Str("prefix", prefix).Msg("proxy error")
 		http.Error(w, "unable to connect to room", http.StatusBadGateway)

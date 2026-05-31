@@ -1,0 +1,113 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: unless-stopped
+    networks:
+      - iris_backend
+
+  db:
+    image: ghcr.io/dfir-iris/iriswebapp_db:${IRIS_VERSION:-v2.4.27}
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_ADMIN_USER
+      - POSTGRES_ADMIN_PASSWORD
+      - POSTGRES_DB
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - iris_backend
+
+  app:
+    image: ghcr.io/dfir-iris/iriswebapp_app:${IRIS_VERSION:-v2.4.27}
+    command: ["nohup", "./iris-entrypoint.sh", "iriswebapp"]
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - db
+    env_file:
+      - .env
+    environment:
+      - LOG_LEVEL
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_ADMIN_USER
+      - POSTGRES_ADMIN_PASSWORD
+      - POSTGRES_SERVER
+      - POSTGRES_PORT
+      - IRIS_SECRET_KEY
+      - IRIS_SECURITY_PASSWORD_SALT
+    volumes:
+      - ./certificates/rootCA/irisRootCACert.pem:/etc/irisRootCACert.pem:ro
+      - ./certificates/:/home/iris/certificates/:ro
+      - ./certificates/ldap/:/iriswebapp/certificates/ldap/:ro
+      - iris-downloads:/home/iris/downloads
+      - user_templates:/home/iris/user_templates
+      - server_data:/home/iris/server_data
+    networks:
+      - iris_backend
+      - iris_frontend
+
+  worker:
+    image: ghcr.io/dfir-iris/iriswebapp_app:${IRIS_VERSION:-v2.4.27}
+    command: ["./wait-for-iriswebapp.sh", "app:8000", "./iris-entrypoint.sh", "iris-worker"]
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - db
+      - app
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_ADMIN_USER
+      - POSTGRES_ADMIN_PASSWORD
+      - POSTGRES_SERVER
+      - POSTGRES_PORT
+      - IRIS_SECRET_KEY
+      - IRIS_SECURITY_PASSWORD_SALT
+      - IRIS_WORKER
+      - LOG_LEVEL
+    volumes:
+      - ./certificates/rootCA/irisRootCACert.pem:/etc/irisRootCACert.pem:ro
+      - ./certificates/:/home/iris/certificates/:ro
+      - ./certificates/ldap/:/iriswebapp/certificates/ldap/:ro
+      - iris-downloads:/home/iris/downloads
+      - user_templates:/home/iris/user_templates
+      - server_data:/home/iris/server_data
+    networks:
+      - iris_backend
+
+  nginx:
+    image: ghcr.io/dfir-iris/iriswebapp_nginx:${IRIS_VERSION:-v2.4.27}
+    restart: unless-stopped
+    depends_on:
+      - app
+    environment:
+      - IRIS_UPSTREAM_SERVER
+      - IRIS_UPSTREAM_PORT
+      - IRIS_FRONTEND_SERVER
+      - IRIS_FRONTEND_PORT
+      - INTERFACE_HTTPS_PORT
+      - SERVER_NAME
+      - CERT_FILENAME
+      - KEY_FILENAME
+      - IRIS_AUTHENTICATION_TYPE
+    ports:
+      - "8443:443"
+    volumes:
+      - ./certificates/web_certificates/:/www/certs/:ro
+    networks:
+      - iris_frontend
+
+volumes:
+  iris-downloads:
+  user_templates:
+  server_data:
+  db_data:
+
+networks:
+  iris_backend:
+  iris_frontend:

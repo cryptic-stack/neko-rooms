@@ -50,6 +50,7 @@ docker pull crypticstack/ihacknebraska:kali
 docker pull crypticstack/ihacknebraska:firefox
 docker pull crypticstack/ihacknebraska:chromium
 docker pull crypticstack/ihacknebraska:windows
+docker pull crypticstack/ihacknebraska:dfir-iris
 ```
 
 By default, HackLab loads lab images from Docker Hub using:
@@ -60,6 +61,7 @@ crypticstack/ihacknebraska:kali
 crypticstack/ihacknebraska:firefox
 crypticstack/ihacknebraska:chromium
 crypticstack/ihacknebraska:windows
+crypticstack/ihacknebraska:dfir-iris
 ```
 
 To build and publish all default lab images:
@@ -79,6 +81,12 @@ To publish a single image to a different Docker Hub namespace:
 HackLab includes a Windows lab image wrapper at `lab-images/windows`, based on [`dockurr/windows`](https://github.com/dockur/windows). Dockur Windows uses a web viewer on port `8006`, KVM acceleration, and persistent VM storage. The HackLab image labels its viewer port so room URLs proxy correctly.
 
 Windows rooms need `/dev/kvm`, `/dev/net/tun`, and privileged mode or `NET_ADMIN`. The default `docker-compose.yml` whitelists `crypticstack/ihacknebraska:windows` for privileged room launches. When creating a Windows room, add private storage mounted to `/storage` and add the required devices in expert settings.
+
+### DFIR-IRIS labs
+
+HackLab includes a DFIR-IRIS incident response platform wrapper at `lab-images/dfir-iris`, based on the official [`dfir-iris/iris-web`](https://github.com/dfir-iris/iris-web) Docker Compose deployment. IRIS is a multi-service app, so the wrapper runs Docker-in-Docker and exposes the internal nginx HTTPS endpoint on the room URL.
+
+Default login is `administrator` / `ihacknebraska`. Change this with `IRIS_ADM_USERNAME`, `IRIS_ADM_PASSWORD`, and `IRIS_ADM_EMAIL` environment variables when creating the room. The default `docker-compose.yml` whitelists `crypticstack/ihacknebraska:dfir-iris` for privileged room launches.
 
 Make sure Docker Desktop is logged in to an account with push access before publishing:
 

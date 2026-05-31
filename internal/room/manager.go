@@ -34,7 +34,7 @@ import (
 )
 
 const (
-	frontendPort        = 8080
+	defaultFrontendPort = 8080
 	templateStoragePath = "./templates"
 	privateStoragePath  = "./rooms"
 	privateStorageUid   = 1000
@@ -250,16 +250,25 @@ func (manager *RoomManagerCtx) Create(ctx context.Context, settings types.RoomSe
 		return "", fmt.Errorf("invalid neko image")
 	}
 
+	inspect, err := manager.client.ImageInspect(ctx, settings.NekoImage)
+	if err != nil {
+		return "", err
+	}
+
+	frontendPort, err := frontendPortFromLabels(inspect.Config.Labels)
+	if err != nil {
+		return "", err
+	}
+
+	statsEnabled, err := statsEnabledFromLabels(inspect.Config.Labels)
+	if err != nil {
+		return "", err
+	}
+
 	// if api version is not set, try to detect it
 	if settings.ApiVersion == 0 {
-		inspect, err := manager.client.ImageInspect(ctx, settings.NekoImage)
-		if err != nil {
-			return "", err
-		}
-
 		// based on image label (preferred)
 		if val, ok := inspect.Config.Labels["net.m1k1o.neko.api-version"]; ok {
-			var err error
 			settings.ApiVersion, err = strconv.Atoi(val)
 			if err != nil {
 				return "", err
@@ -353,9 +362,11 @@ func (manager *RoomManagerCtx) Create(ctx context.Context, settings types.RoomSe
 	}
 
 	labels := manager.serializeLabels(RoomLabels{
-		Name: roomName,
-		Mux:  manager.config.Mux,
-		Epr:  epr,
+		Name:         roomName,
+		Mux:          manager.config.Mux,
+		Epr:          epr,
+		Port:         frontendPort,
+		StatsEnabled: statsEnabled,
 
 		NekoImage:  settings.NekoImage,
 		ApiVersion: settings.ApiVersion,
@@ -490,6 +501,12 @@ func (manager *RoomManagerCtx) Create(ctx context.Context, settings types.RoomSe
 
 	paths := map[string]bool{}
 	mounts := []dockerMount.Mount{}
+	imageBindMounts, err := bindMountsFromLabels(inspect.Config.Labels)
+	if err != nil {
+		return "", err
+	}
+	mounts = append(mounts, imageBindMounts...)
+
 	for _, mount := range settings.Mounts {
 		// ignore duplicates
 		if _, ok := paths[mount.ContainerPath]; ok {
@@ -898,6 +915,19 @@ func (manager *RoomManagerCtx) GetStats(ctx context.Context, id string) (*types.
 	labels, err := manager.extractLabels(container.Config.Labels)
 	if err != nil {
 		return nil, err
+	}
+
+	if !labels.StatsEnabled {
+		stats := &types.RoomStats{
+			Members: []*types.RoomMember{},
+		}
+		if container.State.StartedAt != "" {
+			stats.ServerStartedAt, err = time.Parse(time.RFC3339, container.State.StartedAt)
+			if err != nil {
+				return nil, err
+			}
+		}
+		return stats, nil
 	}
 
 	settings := types.RoomSettings{}

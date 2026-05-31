@@ -1,0 +1,24 @@
+services:
+  windows:
+    image: crypticstack/ihacknebraska:windows
+    build:
+      context: ../..
+      dockerfile: lab-images/windows/Dockerfile
+    environment:
+      VERSION: "10"
+      RAM_SIZE: "4G"
+      CPU_CORES: "2"
+      DISK_SIZE: "30G"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "8006:8006"
+      - "3389:3389/tcp"
+      - "3389:3389/udp"
+    volumes:
+      - ./windows:/storage
+    restart: always
+    stop_grace_period: 2m

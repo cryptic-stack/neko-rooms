@@ -203,6 +203,12 @@ func (e *events) waitForRoomReady(roomId string, labels map[string]string) {
 	go func() {
 		defer e.wg.Done()
 
+		frontendPort, err := frontendPortFromLabels(labels)
+		if err != nil {
+			e.logger.Err(err).Str("id", roomId).Msg("failed to detect frontend port")
+			return
+		}
+
 		// check if room is ready
 		exec, err := e.client.ContainerExecCreate(e.ctx, roomId, dockerContainer.ExecOptions{
 			AttachStdout: true,

@@ -49,6 +49,7 @@ docker pull crypticstack/ihacknebraska:xfce
 docker pull crypticstack/ihacknebraska:kali
 docker pull crypticstack/ihacknebraska:firefox
 docker pull crypticstack/ihacknebraska:chromium
+docker pull crypticstack/ihacknebraska:windows
 ```
 
 By default, HackLab loads lab images from Docker Hub using:
@@ -58,6 +59,7 @@ crypticstack/ihacknebraska:xfce
 crypticstack/ihacknebraska:kali
 crypticstack/ihacknebraska:firefox
 crypticstack/ihacknebraska:chromium
+crypticstack/ihacknebraska:windows
 ```
 
 To build and publish all default lab images:
@@ -71,6 +73,12 @@ To publish a single image to a different Docker Hub namespace:
 ```powershell
 .\scripts\publish-lab-images.ps1 -Repository your-dockerhub-org/your-lab-image -Images xfce
 ```
+
+### Windows labs
+
+HackLab includes a Windows lab image wrapper at `lab-images/windows`, based on [`dockurr/windows`](https://github.com/dockur/windows). Dockur Windows uses a web viewer on port `8006`, KVM acceleration, and persistent VM storage. The HackLab image labels its viewer port so room URLs proxy correctly.
+
+Windows rooms need `/dev/kvm`, `/dev/net/tun`, and privileged mode or `NET_ADMIN`. The default `docker-compose.yml` whitelists `crypticstack/ihacknebraska:windows` for privileged room launches. When creating a Windows room, add private storage mounted to `/storage` and add the required devices in expert settings.
 
 Make sure Docker Desktop is logged in to an account with push access before publishing:
 

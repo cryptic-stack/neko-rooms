@@ -1,6 +1,6 @@
 param(
     [string]$Repository = "crypticstack/ihacknebraska",
-    [string[]]$Images = @("xfce", "kali", "firefox", "chromium"),
+    [string[]]$Images = @("xfce", "kali", "firefox", "chromium", "windows"),
     [switch]$NoPush
 )
 
@@ -25,6 +25,11 @@ $imageDefinitions = @{
     chromium = @{
         Dockerfile = "lab-images/chromium/Dockerfile"
         Tag = "chromium"
+        AlsoTagLatest = $false
+    }
+    windows = @{
+        Dockerfile = "lab-images/windows/Dockerfile"
+        Tag = "windows"
         AlsoTagLatest = $false
     }
 }

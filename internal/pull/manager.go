@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"slices"
+	"strings"
 	"sync"
 	"time"
 
@@ -105,6 +106,15 @@ func (manager *PullManagerCtx) Start(request types.PullStart) error {
 	reader, err := manager.client.ImagePull(ctx, request.NekoImage, opts)
 
 	if err != nil {
+		if manager.imageExistsLocally(ctx, request.NekoImage) && isRegistryNotFound(err) {
+			manager.status.Status = append(
+				manager.status.Status,
+				fmt.Sprintf("Image %s is already available locally; registry pull skipped.", request.NekoImage),
+			)
+			manager.setDone()
+			return nil
+		}
+
 		manager.setDone()
 		return err
 	}
@@ -152,6 +162,18 @@ func (manager *PullManagerCtx) Start(request types.PullStart) error {
 	}()
 
 	return nil
+}
+
+func (manager *PullManagerCtx) imageExistsLocally(ctx context.Context, image string) bool {
+	_, _, err := manager.client.ImageInspectWithRaw(ctx, image)
+	return err == nil
+}
+
+func isRegistryNotFound(err error) bool {
+	message := strings.ToLower(err.Error())
+	return strings.Contains(message, "not found") ||
+		strings.Contains(message, "pull access denied") ||
+		strings.Contains(message, "repository does not exist")
 }
 
 func (manager *PullManagerCtx) Stop() error {

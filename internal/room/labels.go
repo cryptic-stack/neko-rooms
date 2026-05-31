@@ -6,16 +6,20 @@ import (
 	"strconv"
 	"strings"
 
+	dockerMount "github.com/docker/docker/api/types/mount"
+
 	"github.com/m1k1o/neko-rooms/internal/types"
 )
 
 var labelRegex = regexp.MustCompile(`^[a-z0-9.-]+$`)
 
 type RoomLabels struct {
-	Name string
-	URL  string
-	Mux  bool
-	Epr  EprPorts
+	Name         string
+	URL          string
+	Mux          bool
+	Epr          EprPorts
+	Port         uint16
+	StatsEnabled bool
 
 	NekoImage  string
 	ApiVersion int
@@ -90,10 +94,19 @@ func (manager *RoomManagerCtx) extractLabels(labels map[string]string) (*RoomLab
 		return nil, fmt.Errorf("damaged container labels: neko_image not found")
 	}
 
+	frontendPort, err := frontendPortFromLabels(labels)
+	if err != nil {
+		return nil, err
+	}
+
+	statsEnabled, err := statsEnabledFromLabels(labels)
+	if err != nil {
+		return nil, err
+	}
+
 	apiVersion := 2 // default, prior to api versioning
 	apiVersionStr, ok := labels["m1k1o.neko_rooms.api_version"]
 	if ok {
-		var err error
 		apiVersion, err = strconv.Atoi(apiVersionStr)
 		if err != nil {
 			return nil, err
@@ -127,10 +140,12 @@ func (manager *RoomManagerCtx) extractLabels(labels map[string]string) (*RoomLab
 	}
 
 	return &RoomLabels{
-		Name: name,
-		URL:  url,
-		Mux:  mux,
-		Epr:  epr,
+		Name:         name,
+		URL:          url,
+		Mux:          mux,
+		Epr:          epr,
+		Port:         frontendPort,
+		StatsEnabled: statsEnabled,
 
 		NekoImage:  nekoImage,
 		ApiVersion: apiVersion,
@@ -160,6 +175,14 @@ func (manager *RoomManagerCtx) serializeLabels(labels RoomLabels) map[string]str
 		labelsMap["m1k1o.neko_rooms.epr.max"] = fmt.Sprintf("%d", labels.Epr.Max)
 	}
 
+	if labels.Port != 0 && labels.Port != defaultFrontendPort {
+		labelsMap["m1k1o.neko_rooms.frontend_port"] = fmt.Sprintf("%d", labels.Port)
+	}
+
+	if !labels.StatsEnabled {
+		labelsMap["m1k1o.neko_rooms.stats"] = "false"
+	}
+
 	if labels.BrowserPolicy != nil {
 		labelsMap["m1k1o.neko_rooms.browser_policy"] = "true"
 		labelsMap["m1k1o.neko_rooms.browser_policy.type"] = string(labels.BrowserPolicy.Type)
@@ -178,4 +201,72 @@ func (manager *RoomManagerCtx) serializeLabels(labels RoomLabels) map[string]str
 
 func CheckLabelKey(name string) bool {
 	return labelRegex.MatchString(name)
+}
+
+func frontendPortFromLabels(labels map[string]string) (uint16, error) {
+	val, ok := labels["m1k1o.neko_rooms.frontend_port"]
+	if !ok || val == "" {
+		return defaultFrontendPort, nil
+	}
+
+	port, err := strconv.ParseUint(val, 10, 16)
+	if err != nil {
+		return 0, fmt.Errorf("invalid frontend_port label: %w", err)
+	}
+	if port == 0 {
+		return 0, fmt.Errorf("invalid frontend_port label: must be greater than 0")
+	}
+
+	return uint16(port), nil
+}
+
+func statsEnabledFromLabels(labels map[string]string) (bool, error) {
+	val, ok := labels["m1k1o.neko_rooms.stats"]
+	if !ok || val == "" {
+		if image, ok := labels["m1k1o.neko_rooms.neko_image"]; ok && strings.Contains(strings.ToLower(image), "windows") {
+			return false, nil
+		}
+		return true, nil
+	}
+
+	enabled, err := strconv.ParseBool(val)
+	if err != nil {
+		return false, fmt.Errorf("invalid stats label: %w", err)
+	}
+
+	return enabled, nil
+}
+
+func bindMountsFromLabels(labels map[string]string) ([]dockerMount.Mount, error) {
+	val, ok := labels["m1k1o.neko_rooms.bind_mounts"]
+	if !ok || val == "" {
+		return nil, nil
+	}
+
+	mounts := []dockerMount.Mount{}
+	for _, item := range strings.Split(val, ",") {
+		parts := strings.Split(item, ":")
+		if len(parts) != 2 {
+			return nil, fmt.Errorf("invalid bind_mounts label item %q", item)
+		}
+
+		source := strings.TrimSpace(parts[0])
+		target := strings.TrimSpace(parts[1])
+		if source == "" || target == "" {
+			return nil, fmt.Errorf("invalid bind_mounts label item %q", item)
+		}
+
+		mounts = append(mounts, dockerMount.Mount{
+			Type:        dockerMount.TypeBind,
+			Source:      source,
+			Target:      target,
+			Consistency: dockerMount.ConsistencyDefault,
+			BindOptions: &dockerMount.BindOptions{
+				Propagation:  dockerMount.PropagationRPrivate,
+				NonRecursive: false,
+			},
+		})
+	}
+
+	return mounts, nil
 }

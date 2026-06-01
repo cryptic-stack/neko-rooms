@@ -520,6 +520,7 @@ func (manager *RoomManagerCtx) Create(ctx context.Context, settings types.RoomSe
 
 	paths := map[string]bool{}
 	mounts := []dockerMount.Mount{}
+	devicePaths := map[string]bool{}
 	imageBindMounts, err := bindMountsFromLabels(inspect.Config.Labels)
 	if err != nil {
 		return "", err
@@ -640,11 +641,15 @@ func (manager *RoomManagerCtx) Create(ctx context.Context, settings types.RoomSe
 
 	var devices []dockerContainer.DeviceMapping
 	for _, device := range settings.Resources.Devices {
+		if _, ok := devicePaths[device]; ok {
+			continue
+		}
 		devices = append(devices, dockerContainer.DeviceMapping{
 			PathOnHost:        device,
 			PathInContainer:   device,
 			CgroupPermissions: "rwm",
 		})
+		devicePaths[device] = true
 	}
 
 	//
@@ -794,8 +799,21 @@ func (manager *RoomManagerCtx) GetSettings(ctx context.Context, id string) (*typ
 	privateStorageRoot := path.Join(manager.config.StorageExternal, privateStoragePath, labels.Name)
 	templateStorageRoot := path.Join(manager.config.StorageExternal, templateStoragePath)
 
+	imageBindMounts, err := bindMountsFromLabels(container.Config.Labels)
+	if err != nil {
+		return nil, err
+	}
+	imageMountTargets := map[string]string{}
+	for _, mount := range imageBindMounts {
+		imageMountTargets[mount.Target] = mount.Source
+	}
+
 	mounts := []types.RoomMount{}
 	for _, mount := range container.Mounts {
+		if source, ok := imageMountTargets[mount.Destination]; ok && source == mount.Source {
+			continue
+		}
+
 		mountType := types.MountPublic
 		hostPath := mount.Source
 

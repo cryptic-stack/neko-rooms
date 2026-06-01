@@ -13,10 +13,11 @@ services:
     restart: "unless-stopped"
     environment:
       - "TZ=Europe/Vienna"
-      - "NEKO_ROOMS_MUX=true"
+      - "NEKO_ROOMS_BIND=0.0.0.0:8080"
+      - "NEKO_ROOMS_MUX=false"
       - "NEKO_ROOMS_EPR=59000-59049"
-      - "NEKO_ROOMS_NAT1TO1=${NEKO_ROOMS_NAT1TO1:-192.168.1.15}" # IP address of your server that is reachable from client
-      - "NEKO_ROOMS_INSTANCE_URL=http://${NEKO_ROOMS_NAT1TO1:-192.168.1.15}:8080/" # external URL
+      - "NEKO_ROOMS_NAT1TO1=${NEKO_ROOMS_NAT1TO1:-10.65.22.172}" # WebRTC needs the single client-reachable host IP; override for other LAN/VPN addresses
+      - "NEKO_ROOMS_INSTANCE_URL=${NEKO_ROOMS_INSTANCE_URL:-/}" # relative room URLs work with any hostname/IP used by the browser
       - "NEKO_ROOMS_INSTANCE_NAME=hacklab"
       - "NEKO_ROOMS_INSTANCE_NETWORK=hacklab-net"
       - "NEKO_ROOMS_TRAEFIK_ENABLED=false"
